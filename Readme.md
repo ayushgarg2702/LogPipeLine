@@ -49,8 +49,7 @@ Ensure you have the following installed:
 ## Step 1: Clone the Repository
 
 ```console
-git clone https://github.com/yourusername/log-processor.git
-cd log-processor
+git clone https://github.com/ayushgarg2702/LogPipeLine.git
 ```
 
 ## Step 2: Start the Docker Containers
@@ -125,44 +124,6 @@ http://localhost:5601
 - To stop and remove all containers, networks, and volumes used by Docker Compose:
 ```console
 docker-compose down
-```
-
-
-# Extended Features
-
-## Grafana
-
-- First, update your package list and install necessary packages:
-```console
-sudo apt-get update
-sudo apt-get install -y apt-transport-https software-properties-common wget
-```
-
-- Next, add the Grafana GPG key to your system:
-```console
-wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
-```
-
-- Add the Grafana repository to your APT sources:
-```console
-echo "deb https://packages.grafana.com/oss/deb stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
-```
-
-- Update your package list again to include the Grafana repository:
-```console
-sudo apt-get update
-```
-
-- Finally, install Grafana:
-```console
-sudo apt-get install -y grafana
-```
-
-```console
-grafana-server -v
-sudo systemctl start grafana-server
-sudo systemctl enable grafana-server
-sudo systemctl stop grafana-server
 ```
 
 # To get the docker log service wise
