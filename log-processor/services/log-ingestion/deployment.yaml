@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-ingestion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-ingestion
+  template:
+    metadata:
+      labels:
+        app: log-ingestion
+    spec:
+      containers:
+        - name: log-ingestion
+          image: ./log-ingestion:latest # docker build -t your-registry/log-ingestion:latest ./log-processor/services/log-ingestion
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka:9092"  # Replace with your Kafka broker URL
+          # Add other environment variables as needed

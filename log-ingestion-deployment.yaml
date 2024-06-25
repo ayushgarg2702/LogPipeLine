@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-ingestion
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: log-ingestion
+  template:
+    metadata:
+      labels:
+        app: log-ingestion
+    spec:
+      containers:
+      - name: log-ingestion
+        image: your-docker-image
+        ports:
+        - containerPort: 80

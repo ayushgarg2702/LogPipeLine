@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092  # Listener configuration
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Advertised listener configuration
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  log-ingestion:
+    build:
+      context: ./log-processor/services/log-ingestion
+    depends_on:
+      - kafka
+
+  log-storage:
+    build:
+      context: ./log-processor/services/log-storage
+    depends_on:
+      - elasticsearch
+      - kafka
+
+  log-query:
+    build:
+      context: ./log-processor/services/log-query
+    ports:
+      - "5000:5000"
+    depends_on:
+      - elasticsearch
+
+  log-consumer:
+    build:
+      context: ./log-processor/services/log-parsing
+    depends_on:
+      - kafka
+
+  # log-enhancer:
+  #   build:
+  #     context: ./services/log-enhancer
