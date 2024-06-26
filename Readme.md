@@ -105,6 +105,9 @@ http://localhost:5601
 3. Set the index pattern to logs and configure the timestamp field.
 4. Save the index pattern.
 
+![Kibana](Image/image1.png)
+![Kibana](Image/image2.png)
+
 
 # Usage
 
@@ -161,3 +164,71 @@ KAFKA_MESSAGE_MAX_BYTES: 200000000
 KAFKA_REPLICA_FETCH_MAX_BYTES: 200000000
 KAFKA_LOG_RETENTION_HOURS: 168  # 7 days
 ```
+
+# Extended Feature
+
+## Grafana
+
+- Install grafana
+```console
+docker pull grafana/grafana
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
+```
+
+- We can EleasticSearch data for monitoring using grafana, also we can set alerts also.
+- Check Elasticsearch for Logs
+```console
+curl -X GET "localhost:9200/logs/_search?pretty"
+```
+
+- Configure Elasticsearch as a Data Source in Grafana
+- - Access Grafana:
+- - * Open your browser and navigate to http://localhost:3000.
+- - * Log in with the default credentials admin/admin.
+
+- - Add Elasticsearch Data Source:
+- - * Navigate to Configuration > Data Sources.
+- - * Click on Add data source.
+- - * Select Elasticsearch.
+
+- - Configure Elasticsearch Data Source:
+- - * Name: Give your data source a name (e.g., Elasticsearch).
+- - * URL: Enter http://elasticsearch:9200 (since both Elasticsearch and Grafana are on the same Docker network, elasticsearch is the hostname used in Docker).
+- - * Index name: Enter logs.
+- - * Timestamp field name: Enter timestamp.
+
+- - Save & Test the configuration.
+
+-  Create a Dashboard in Grafana
+- - Create a New Dashboard:
+- - * Navigate to Create > Dashboard.
+- - * Click Add new panel.
+
+- - Query Elasticsearch:
+- - * In the Query section, select Elasticsearch from the Data Source dropdown.
+- - * This query will retrieve all logs from the logs index.
+```console
+* 
+```
+
+- - * To filter logs by a specific log type, for example, debugLog:
+```console
+logType:debugLog
+```
+
+- - * To filter logs within a specific date range, for example, logs from the last 24 hours:
+```console
+timestamp:[now-24h TO now]
+```
+
+- - * To filter logs that contain a specific message, for example, logs that contain the word error in the message field:
+```console
+message:error
+```
+
+- - * To combine multiple filters, for example, logs that are of type errorLog and were created in the last 24 hours:
+```console
+logType:errorLog AND timestamp:[now-24h TO now]
+```
+
+![Grafana](Image/image3.png)
